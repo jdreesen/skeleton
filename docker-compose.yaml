@@ -3,6 +3,9 @@ services:
         image: redis:alpine
         command: [ redis-server, --maxmemory 128mb, --maxmemory-policy volatile-lru, --save "" ]
 
+    rabbitmq:
+        image: rabbitmq:alpine
+
     db:
         image: mariadb:10.11
         working_dir: /application
@@ -40,6 +43,7 @@ services:
         environment:
             COMPOSER_HOME: /var/www/html
             PHP_IDE_CONFIG: serverName=localhost
+            MESSENGER_TRANSPORT_DSN: amqp://guest:guest@rabbitmq:5672/%2f/
             # Feed installer configuration via ENV variables.
             # See: https://pimcore.com/docs/pimcore/current/Development_Documentation/Getting_Started/Advanced_Installation_Topics.html#page_Advanced-Installation-Topics
             PIMCORE_INSTALL_MYSQL_USERNAME: pimcore
@@ -52,15 +56,21 @@ services:
                 condition: service_healthy
         volumes:
             - .:/var/www/html
+            - ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
 
     supervisord:
         #user: '1000:1000' # set to your uid:gid
         image: pimcore/pimcore:php8.2-supervisord-latest
+        environment:
+            MESSENGER_TRANSPORT_DSN: amqp://guest:guest@rabbitmq:5672/%2f/
         depends_on:
+            rabbitmq:
+                condition: service_started
             db:
                 condition: service_healthy
         volumes:
             - .:/var/www/html
+            - ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
             - ./.docker/supervisord.conf:/etc/supervisor/conf.d/pimcore.conf:ro
 
     # The following two services are used for testing.
