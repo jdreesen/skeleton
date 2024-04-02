@@ -5,6 +5,8 @@ services:
 
     rabbitmq:
         image: rabbitmq:alpine
+        volumes:
+            - pimcore-rabbitmq:/var/lib/rabbitmq/
 
     db:
         image: mariadb:10.11
@@ -97,6 +99,7 @@ services:
 
 volumes:
     pimcore-database:
+    pimcore-rabbitmq:
     pimcore-test-database:
     pimcore-test-var:
     pimcore-test-public-var:
