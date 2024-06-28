@@ -22,11 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Web2printController extends FrontendController
 {
-    /**
-     *
-     * @return Response
-     */
-    public function defaultAction(Request $request)
+    public function defaultAction(Request $request): Response
     {
         $paramsBag = [
             'document' => $this->document
@@ -46,12 +42,9 @@ class Web2printController extends FrontendController
     }
 
     /**
-     *
-     * @return Response
-     *
      * @throws \Exception
      */
-    public function containerAction(Request $request)
+    public function containerAction(Request $request): Response
     {
         $paramsBag = [
             'document' => $this->document
