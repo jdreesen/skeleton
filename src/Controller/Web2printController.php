@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 class Web2printController extends FrontendController
 {
     /**
-     * @param Request $request
      *
      * @return Response
      */
@@ -47,7 +46,6 @@ class Web2printController extends FrontendController
     }
 
     /**
-     * @param Request $request
      *
      * @return Response
      *
